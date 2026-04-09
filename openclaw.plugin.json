@@ -1,0 +1,10 @@
+{
+  "id": "circleback",
+  "name": "Circleback",
+  "description": "Search and access meetings, transcripts, emails, calendar events, and more from Circleback.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
