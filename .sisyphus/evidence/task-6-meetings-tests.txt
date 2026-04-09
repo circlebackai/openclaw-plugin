@@ -1,0 +1,12 @@
+ RUN  v2.1.9 /Users/rod/conductor/workspaces/openclaw-circleback/indianapolis
+
+ ✓ src/__tests__/meetings.test.ts > Meeting Tools > SearchMeetings > registers with correct name and params
+ ✓ src/__tests__/meetings.test.ts > Meeting Tools > SearchMeetings > forwards params to callTool and returns result
+ ✓ src/__tests__/meetings.test.ts > Meeting Tools > ReadMeetings > registers with correct name
+ ✓ src/__tests__/meetings.test.ts > Meeting Tools > ReadMeetings > forwards meetingIds to callTool
+ ✓ src/__tests__/meetings.test.ts > Meeting Tools > handles callTool errors gracefully
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  23:22:40
+   Duration  516ms (transform 55ms, setup 0ms, collect 82ms, tests 3ms, environment 0ms, prepare 71ms)

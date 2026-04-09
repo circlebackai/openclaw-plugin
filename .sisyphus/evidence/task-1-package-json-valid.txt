@@ -1,0 +1,1 @@
+{"name":"@circleback/openclaw-circleback","type":"module","ext":["./index.ts"],"cli":true}
