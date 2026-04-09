@@ -54,7 +54,8 @@ export default definePluginEntry({
       api.registerTool({
         ...tool,
         async execute(_toolCallId: string, params: Record<string, unknown>) {
-          return await callTool(tool.name, params);
+          const text = await callTool(tool.name, params);
+          return { content: [{ type: "text", text }] };
         },
       });
     }

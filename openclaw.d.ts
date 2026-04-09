@@ -11,5 +11,5 @@ declare module "@circleback/cli/dist/client/jsonRpc.js" {
   export function callTool(
     toolName: string,
     toolArguments: Record<string, unknown>,
-  ): Promise<{ content: Array<{ type: string; text: string }> }>;
+  ): Promise<string>;
 }
