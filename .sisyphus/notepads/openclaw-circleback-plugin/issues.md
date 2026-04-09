@@ -1,0 +1,2 @@
+- LSP diagnostics could not run because the configured biome server is not installed in this workspace.
+- Source/plan mismatch: planning notes assumed FindProfiles/FindDomains as the only non-Search tool names, but the CLI also uses Search* tool names for meetings, transcripts, calendar, support, emails, and action items.

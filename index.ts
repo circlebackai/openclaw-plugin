@@ -1,21 +1,62 @@
 import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-import { registerMeetingTools } from "./src/tools/meetings.js";
-import { registerTranscriptTools } from "./src/tools/transcripts.js";
-import { registerCalendarTools } from "./src/tools/calendar.js";
-import { registerEmailTools } from "./src/tools/emails.js";
-import { registerPeopleTools } from "./src/tools/people.js";
-import { registerActionTools } from "./src/tools/actions.js";
+import { callTool } from "@circleback/cli/dist/client/jsonRpc.js";
+
+const tools = [
+  {
+    name: "SearchMeetings",
+    description: "Search meetings by keyword, date range, tags, people, or companies.",
+  },
+  {
+    name: "ReadMeetings",
+    description: "Get detailed meeting info including notes and action items.",
+  },
+  {
+    name: "SearchTranscripts",
+    description: "Search meeting transcript content by keyword.",
+  },
+  {
+    name: "GetTranscriptsForMeetings",
+    description: "Retrieve complete transcripts for specific meetings.",
+  },
+  {
+    name: "SearchCalendarEvents",
+    description: "Search calendar events by date range.",
+  },
+  {
+    name: "SearchEmails",
+    description: "Search emails with inline filters (from:, to:, before:, after:).",
+  },
+  {
+    name: "FindProfiles",
+    description: "Search people by name.",
+  },
+  {
+    name: "FindDomains",
+    description: "Search companies by name or domain.",
+  },
+  {
+    name: "SearchActionItems",
+    description: "Search action items with status, assignee, date, and tag filters.",
+  },
+  {
+    name: "SearchSupportArticles",
+    description: "Search Circleback support documentation.",
+  },
+];
 
 export default definePluginEntry({
   id: "circleback",
   name: "Circleback",
-  description: "Search and access meetings, transcripts, emails, calendar events, and more from Circleback.",
+  description:
+    "Search and access meetings, transcripts, emails, calendar events, and more from Circleback.",
   register(api) {
-    registerMeetingTools(api);
-    registerTranscriptTools(api);
-    registerCalendarTools(api);
-    registerEmailTools(api);
-    registerPeopleTools(api);
-    registerActionTools(api);
+    for (const tool of tools) {
+      api.registerTool({
+        ...tool,
+        async execute(_toolCallId: string, params: Record<string, unknown>) {
+          return await callTool(tool.name, params);
+        },
+      });
+    }
   },
 });

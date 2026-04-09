@@ -10,6 +10,6 @@
     "skipLibCheck": true,
     "declaration": true
   },
-  "include": ["index.ts", "src/**/*.ts"],
+  "include": ["index.ts", "openclaw.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -4,16 +4,13 @@
   "type": "module",
   "description": "Circleback Community Plugin for OpenClaw",
   "scripts": {
-    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@circleback/cli": "^0.1.4"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "vitest": "^2.0.0",
-    "@sinclair/typebox": "^0.32.0"
+    "typescript": "^5.0.0"
   },
   "openclaw": {
     "extensions": ["./index.ts"],
