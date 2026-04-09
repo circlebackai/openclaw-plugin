@@ -1,1 +1,0 @@
-- No functional source files exist yet, so typechecking is intentionally limited to scaffold validation.

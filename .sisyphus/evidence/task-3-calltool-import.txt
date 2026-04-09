@@ -1,9 +1,0 @@
-Working import path: ./node_modules/@circleback/cli/dist/client/jsonRpc.js
-
-CJS require result:
-- exports: [ 'callTool' ]
-- typeof callTool: function
-
-ESM import result:
-- exports: [ '__esModule', 'callTool', 'default' ]
-- typeof callTool: function
