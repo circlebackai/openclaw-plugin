@@ -34,6 +34,7 @@ If you encounter authentication errors, run `cb login` again to refresh your tok
 | FindDomains | Search companies by name or domain |
 | SearchActionItems | Search action items with status, assignee, date, and tag filters |
 | SearchSupportArticles | Search Circleback support documentation |
+| ListTags | List all tags used to organize meetings |
 
 ## Troubleshooting
 

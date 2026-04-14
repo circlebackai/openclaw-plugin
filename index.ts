@@ -271,6 +271,20 @@ const tools = [
       required: ["searchTerm"],
     },
   },
+  {
+    name: "ListTags",
+    description: "List all tags used to organize meetings.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        intent: {
+          type: "string",
+          description: "The reason why this tool call is being done.",
+        },
+      },
+      required: ["intent"],
+    },
+  },
 ];
 
 export default definePluginEntry({

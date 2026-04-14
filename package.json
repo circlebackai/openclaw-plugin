@@ -7,13 +7,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@circleback/cli": "^0.1.4"
+    "@circleback/cli": "^0.1.6"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
   },
   "openclaw": {
-    "extensions": ["./index.ts"],
+    "extensions": [
+      "./index.ts"
+    ],
     "compat": {
       "pluginApi": ">=2026.3.24-beta.2"
     }
