@@ -1,4 +1,4 @@
-# Circleback for OpenClaw
+# Circleback OpenClaw plugin
 
 Circleback plugin for OpenClaw. Search and access meetings, transcripts, emails, calendar events, and more.
 

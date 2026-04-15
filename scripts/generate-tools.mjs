@@ -57,8 +57,6 @@ async function fetchToolsList() {
 }
 
 async function main() {
-  console.log("Fetching tools from Circleback MCP server...");
-
   const mcpTools = await fetchToolsList();
 
   const tools = mcpTools.map((tool) => ({
