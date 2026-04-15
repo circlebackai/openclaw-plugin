@@ -1,24 +1,19 @@
 # Circleback for OpenClaw
 
-Circleback Community Plugin for OpenClaw. Search and access meetings, transcripts, emails, calendar events, and more.
+Circleback plugin for OpenClaw. Search and access meetings, transcripts, emails, calendar events, and more.
 
-## Prerequisites
+## Setup
 
-- Node.js >= 18
-- [@circleback/cli](https://www.npmjs.com/package/@circleback/cli) installed globally
-- Authenticated via `cb login`
+1. Install the plugin:
+   ```
+   openclaw plugins install @circleback/openclaw-circleback
+   ```
 
-## Installation
-
-npm install -g @circleback/cli
-cb login
-openclaw plugin add @circleback/openclaw-circleback
-
-## Authentication
-
-This plugin uses `@circleback/cli` for authentication. You must run `cb login` once to authenticate with your Circleback account. Tokens are stored at `~/.config/circleback/tokens.json` and refresh automatically.
-
-If you encounter authentication errors, run `cb login` again to refresh your tokens.
+2. Authenticate with Circleback:
+   ```
+   cb login
+   ```
+   This opens a browser window to log in. Tokens are stored locally and refresh automatically.
 
 ## Available Tools
 
@@ -38,8 +33,6 @@ If you encounter authentication errors, run `cb login` again to refresh your tok
 
 ## Troubleshooting
 
-**"Not authenticated" error**: Run `cb login` to authenticate with Circleback.
+**"Not authenticated" error**: Run `cb login` to authenticate.
 
-**"Token expired" error**: Run `cb login` again. Tokens normally refresh automatically, but may expire after extended inactivity.
-
-**Plugin not loading**: Ensure `@circleback/cli` is installed globally (`npm install -g @circleback/cli`).
+**"Token expired" error**: Run `cb login` again.

@@ -1,13 +1,14 @@
 {
-  "name": "@circleback/openclaw-circleback",
+  "name": "@circleback/openclaw-plugin",
   "version": "0.1.0",
   "type": "module",
-  "description": "Circleback Community Plugin for OpenClaw",
+  "description": "Circleback plugin for OpenClaw.",
   "scripts": {
+    "generate": "node scripts/generate-tools.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@circleback/cli": "^0.1.6"
+    "@circleback/cli": "0.1.6"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

@@ -1,14 +1,8 @@
 declare module "openclaw/plugin-sdk/plugin-entry" {
-  interface JsonSchema {
-    type: "object";
-    properties: Record<string, unknown>;
-    required?: string[];
-  }
-
   interface ToolDefinition {
     name: string;
     description: string;
-    inputSchema: JsonSchema;
+    inputSchema: object;
     execute(
       toolCallId: string,
       params: Record<string, unknown>,

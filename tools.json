@@ -1,0 +1,348 @@
+[
+  {
+    "name": "SearchMeetings",
+    "description": "Find meetings that match a given search term or filter.\n\n      Searches can be done by direct match on the meeting name or notes.\n      Search term is a direct match ignoring case, prefer to search for a single word or phrase if provided.\n      Searches can also be performed for tags or related profiles (attendees of the meetings).\n      When searching for a meeting, the tool will find the appropriate meeting and extract the relevant source excerpt based on the intent instead of returning the entire data.\n      NOTE: A search term is not explicitly required, for example if you want to find all meetings with a specific tag in a date range, only include those and don't pass a searchTerm.\n      To restrict the search further, you can provide a start and end date. This will significantly improve performance.\n      The data returned will be an an array of objects, with each containing meeting data.\n      Only 20 meetings are returned per page, so this function may need to be called multiple times if there are more than that many results.\n      If 20 meetings are returned, call this function again with the next pageIndex to ensure you get all results.\n      IMPORTANT: The pageIndex is only valid for the exact same search parameters (aside from pageIndex).\n      For example, if you provide a start / end date to fetch page 0, then you must provide the EXACT SAME start / end dates to fetch page 1.\n      ",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "intent": {
+          "type": "string",
+          "description": "The reason why this tool call is being done. This intent is likely to be either the user's original question or the reason to investigate further based on their question."
+        },
+        "searchTerm": {
+          "type": "string",
+          "description": "Optional search term to find related meetings."
+        },
+        "pageIndex": {
+          "type": "number",
+          "description": "The page index to fetch. Always start with page 0."
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Optional ISO date string (yyyy-MM-dd) for earliest date to include results from."
+        },
+        "endDate": {
+          "type": "string",
+          "description": "Optional ISO date string (yyyy-MM-dd) for latest date to include results from."
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional array of tag IDs to filter by. When included, only results with at least one of the tags will be returned."
+        },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional array of profile IDs to filter by. When included, only results with all of the profiles as attendees will be returned."
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional array of domains to filter by. When included, only results with attendees from all of the provided domains will be returned."
+        }
+      },
+      "required": [
+        "intent",
+        "pageIndex"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "SearchTranscripts",
+    "description": "Search meeting transcripts to find transcript chunks that match a given search term.\n\n       If the user's question requires searching for multiple distinct search terms, you should call this function multiple times.\n       The data returned will be an an array of objects, with each containing the meeting ID, name, creator user ID, when it was created, the chunk matching the search term, and the start and end timestamps of the matching chunk.\n       Search results can be further filtered by including tags, profiles (attendees), or domains.\n       This function is useful to find relevant meetings where a search term was mentioned. We can find more details about those meetings using the ReadMeetings tool.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "intent": {
+          "type": "string",
+          "description": "The reason why this tool call is being done. This intent is likely to be either the user's original question or the reason to investigate further based on their question."
+        },
+        "searchTerm": {
+          "type": "string",
+          "description": "The search term to find relevant transcript chunks."
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional array of tag IDs to filter by. When included, only results with at least one of the tags will be returned."
+        },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional array of profile IDs to filter by. When included, only results with all of the profiles as attendees will be returned."
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional array of domains to filter by. When included, only results with attendees from all of the provided domains will be returned."
+        }
+      },
+      "required": [
+        "intent",
+        "searchTerm"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "GetTranscriptsForMeetings",
+    "description": "Get the full transcripts for given meeting IDs.\n       The data returned will be an array of objects, each representing a full transcript for a meeting.\n       Each transcript object will contain the meetingId, meetingName, and an array of transcript segments.\n       Each segment is formatted with timestamps like: {startTimestamp: 123.45, endTimestamp: 128.00, speaker: 'John Doe', words: 'This is a test.'}\n       This should be used to get detailed transcript information for one or many meetings at once.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "intent": {
+          "type": "string",
+          "description": "The reason why this tool call is being done. This intent is likely to be either the user's original question or the reason to investigate further based on their question."
+        },
+        "meetingIds": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 50,
+          "description": "Array of meeting IDs to get transcripts for (max 50)."
+        }
+      },
+      "required": [
+        "intent",
+        "meetingIds"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "ReadMeetings",
+    "description": "Given up to 100 meeting IDs, fetch detailed information for each meeting.\n      The data returned will be an array of objects, with each containing the meeting ID, name, notes, attendees, action items, AI-generated insights, creator, tags, status, duration, and creation date.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "intent": {
+          "type": "string",
+          "description": "The reason why this tool call is being done. This intent is likely to be either the user's original question or the reason to investigate further based on their question."
+        },
+        "meetingIds": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "The meeting IDs to get more information about."
+        }
+      },
+      "required": [
+        "intent",
+        "meetingIds"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "FindProfiles",
+    "description": "Find profiles matching the given names.\n      The data returned will be an an array of objects representing each of the matching profiles.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "searchTerms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of people's names to find matching profiles."
+        }
+      },
+      "required": [
+        "searchTerms"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "FindDomains",
+    "description": "Find company domains matching the given search terms.\n      The data returned will be an array of domain strings representing companies accessible through meetings.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "searchTerms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of search terms to find matching company domains."
+        }
+      },
+      "required": [
+        "searchTerms"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "SearchSupportArticles",
+    "description": "Search for support articles about Circleback to find relevant documentation and help content.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "searchTerm": {
+          "type": "string",
+          "description": "The search term or query to find relevant support articles about Circleback. This is typically the user's question or keywords related to their issue."
+        }
+      },
+      "required": [
+        "searchTerm"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "SearchCalendarEvents",
+    "description": "Get calendar events from the user's connected calendars.\n       When searching for calendar events, the tool will extract relevant excerpts based on the intent instead of returning the entire data.\n       Each calendar event excerpt includes comprehensive details: event title, date (in the user's timezone), organizer email, attendees (with names, emails, and status), calendar description (if present), meeting platform (Zoom, Google Meet, Microsoft Teams, etc.), meeting platform link, whether it's a recurring event, Circleback join status, and any associated meeting data from the Circleback (meeting ID, status, tag IDs, user notes).\n       You can filter events by providing a date range using startDate and endDate parameters.\n       This is useful for finding upcoming meetings, scheduled calls, or calendar events that the user has.\n       Note: This should be primarily used for searching calendar events happening in the future. Past calendar events have a meeting record if they were captured with Circleback. The only reason to use this to search past calendar events is if searching for the meeting with SearchMeetings yielded no relevant results.\n      Only 50 calendar events are returned per page, so this function may need to be called multiple times if there are more than that many results.\n      If 50 events are returned, call this function again with the next pageIndex to ensure you get all results.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "intent": {
+          "type": "string",
+          "description": "The reason why this tool call is being done. This intent is likely to be either the user's original question or the reason to investigate further based on their question."
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Optional ISO date string (yyyy-MM-dd) for earliest date to include results from."
+        },
+        "endDate": {
+          "type": "string",
+          "description": "Optional ISO date string (yyyy-MM-dd) for latest date to include results from."
+        },
+        "pageIndex": {
+          "type": "number",
+          "description": "The page index to fetch. Always start with page 0."
+        }
+      },
+      "required": [
+        "intent",
+        "pageIndex"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "SearchEmails",
+    "description": "Search the user's connected email accounts for email threads matching a query. This should be used when the user asks questions about their emails or needs to find specific email conversations.\n       This function queries across all connected email services and retrieves up to 20 matching email threads per service per page.\n       The data returned will be an array of objects, with each containing the email thread ID, subject line, and relevant excerpts.\n       Each email thread object includes metadata such as the sender email, received date, and associated calendar ID (if available).\n       Only 20 email threads are returned per page, so this function may need to be called multiple times if there are more than that many results.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "intent": {
+          "type": "string",
+          "description": "The reason why this tool call is being done. This intent is likely to be either the user's original question or the reason to investigate further based on their question."
+        },
+        "searchTerm": {
+          "type": "string",
+          "description": "A query string to find relevant email threads. Supports search terms and the following filters:\n            - from:email (sender address) or from:me (will search for emails sent by the user)\n            - to:email (recipient address)\n            - participant:email (matches from OR to, prefer using participant for broader search)\n            - before:date (latest date to include results from, in yyyy-MM-dd format)\n            - after:date (earliest date to include results from, in yyyy-MM-dd format)\n            Examples: \"Meeting participant:ali@gmail.com\", \"Q4 report participant:team@company.com\", \"project update to:sarah@company.com after:2025-04-19\", \"participant:company.com\""
+        },
+        "pageIndex": {
+          "type": "number",
+          "description": "The page index to fetch. Always start with page 0."
+        }
+      },
+      "required": [
+        "intent",
+        "searchTerm"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "SearchActionItems",
+    "description": "Find action items that match a given search term or filter. Returns action items with their title, description, status, assignee, and related meeting details.\n       By default, only action items assigned to the user are returned. To find action items assigned to someone else, use FindProfiles to resolve their name to a profile ID and pass it as assigneeProfileId.\n       Action items can be filtered by search terms, status (PENDING or DONE), tags, and meeting date range (startDate/endDate).\n       Only 25 action items are returned per page, so this function may need to be called multiple times if there are more than that many results.\n      If 25 action items are returned, call this function again with the next pageIndex to ensure you get all results.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "intent": {
+          "type": "string",
+          "description": "The reason why this tool call is being done. This intent is likely to be either the user's original question or the reason to investigate further based on their question."
+        },
+        "searchTerms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional array of search terms to find action items by title or description."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "DONE"
+          ],
+          "description": "Optional filter by action item status."
+        },
+        "pageIndex": {
+          "type": "number",
+          "description": "The page index to fetch. Always start with page 0."
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Optional ISO date string (yyyy-MM-dd) for earliest date to include results from."
+        },
+        "endDate": {
+          "type": "string",
+          "description": "Optional ISO date string (yyyy-MM-dd) for latest date to include results from."
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional array of tag IDs to filter by. When included, only results with at least one of the tags will be returned."
+        },
+        "assigneeProfileId": {
+          "type": "number",
+          "description": "Optional profile ID to filter action items by assignee. Use FindProfiles to resolve a name to a profile ID. Always set this when the user mentions a specific person, including themselves. When omitted, only action items assigned to the user are returned."
+        }
+      },
+      "required": [
+        "intent",
+        "pageIndex"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "ListTags",
+    "description": "List all tags available in the user's workspace. Returns an array of tag objects with their IDs and names. Use this to discover available tags before filtering meetings, transcripts, or action items by tag.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "intent": {
+          "type": "string",
+          "description": "The reason why this tool call is being done. This intent is likely to be either the user's original question or the reason to investigate further based on their question."
+        }
+      },
+      "required": [
+        "intent"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  }
+]
