@@ -12,7 +12,7 @@ export default definePluginEntry({
       api.registerTool({
         name: tool.name,
         description: tool.description,
-        inputSchema: tool.inputSchema,
+        parameters: tool.inputSchema,
         async execute(_toolCallId: string, params: Record<string, unknown>) {
           const text = await callTool(tool.name, params);
           return { content: [{ type: "text", text }] };

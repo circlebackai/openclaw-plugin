@@ -2,7 +2,7 @@ declare module "openclaw/plugin-sdk/plugin-entry" {
   interface ToolDefinition {
     name: string;
     description: string;
-    inputSchema: object;
+    parameters: object;
     execute(
       toolCallId: string,
       params: Record<string, unknown>,
