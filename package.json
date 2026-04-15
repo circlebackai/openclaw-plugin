@@ -1,0 +1,29 @@
+{
+  "name": "@circleback/openclaw-plugin",
+  "version": "0.1.2",
+  "type": "module",
+  "description": "Circleback plugin for OpenClaw.",
+  "scripts": {
+    "generate": "node scripts/generate-tools.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@circleback/cli": "0.1.6"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "compat": {
+      "pluginApi": ">=2026.3.24-beta.2",
+      "minGatewayVersion": "2026.3.24-beta.2"
+    },
+    "build": {
+      "openclawVersion": "2026.3.24-beta.2",
+      "pluginSdkVersion": "2026.3.24-beta.2"
+    }
+  }
+}

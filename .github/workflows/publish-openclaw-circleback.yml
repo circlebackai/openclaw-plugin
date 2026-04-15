@@ -1,0 +1,28 @@
+name: Publish OpenClaw Plugin
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - 'package.json'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    environment: 'Production'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Publish to npm
+        run: npx npm@^11.5.1 publish --access public
