@@ -26,7 +26,7 @@ Circleback plugin for OpenClaw. Search and access meetings, transcripts, emails,
 | SearchCalendarEvents | Search calendar events by date range |
 | SearchEmails | Search emails with inline filters (from:, to:, before:, after:) |
 | FindProfiles | Search people by name |
-| FindDomains | Search companies by name or domain |
+| FindCompanies | Search companies by name or domain |
 | SearchActionItems | Search action items with status, assignee, date, and tag filters |
 | SearchSupportArticles | Search Circleback support documentation |
 | ListTags | List all tags used to organize meetings |
