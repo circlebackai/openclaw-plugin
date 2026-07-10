@@ -22,8 +22,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
-      - name: Typecheck
-        run: npx tsc --noEmit
+      - name: Build
+        run: npx tsc
       - name: Publish to npm
         run: npx npm@^11.5.1 publish --access public
       - name: Publish to ClawHub
