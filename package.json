@@ -3,6 +3,10 @@
   "version": "0.1.3",
   "type": "module",
   "description": "Circleback plugin for OpenClaw.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/circlebackai/openclaw-plugin.git"
+  },
   "scripts": {
     "generate": "node scripts/generate-tools.mjs",
     "typecheck": "tsc --noEmit"
