@@ -27,6 +27,8 @@ jobs:
       - name: Publish to npm
         run: npx npm@^11.5.1 publish --access public
       - name: Publish to ClawHub
-        run: npx clawhub@^0.23 package publish . --owner circleback
+        run: |
+          npx clawhub@^0.23 login --token "$CLAWHUB_TOKEN"
+          npx clawhub@^0.23 package publish . --owner circleback
         env:
           CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
