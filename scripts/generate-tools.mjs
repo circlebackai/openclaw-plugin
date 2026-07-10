@@ -12,7 +12,7 @@ import { fileURLToPath } from "url";
 
 const require = createRequire(import.meta.url);
 const { getValidAccessToken } = require("@circleback/cli/dist/auth/oauth");
-const { BASE_URL } = require("@circleback/cli/dist/constants");
+const { BASE_URL, CLIENT_VERSION, CLIENT_VERSION_HEADER } = require("@circleback/cli/dist/constants");
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -25,6 +25,7 @@ async function fetchToolsList() {
       "Content-Type": "application/json",
       Accept: "application/json, text/event-stream",
       Authorization: `Bearer ${accessToken}`,
+      [CLIENT_VERSION_HEADER]: CLIENT_VERSION,
     },
     body: JSON.stringify({
       jsonrpc: "2.0",
