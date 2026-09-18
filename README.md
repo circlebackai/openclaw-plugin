@@ -11,9 +11,11 @@ Circleback plugin for OpenClaw. Search and access meetings, transcripts, emails,
 
 2. Authenticate with Circleback:
    ```
-   cb login
+   cb auth login
    ```
    This opens a browser window to log in. Tokens are stored locally and refresh automatically.
+
+   Alternatively, run `cb auth login --api-key` or set `CIRCLEBACK_API_KEY`.
 
 ## Available Tools
 
@@ -33,6 +35,6 @@ Circleback plugin for OpenClaw. Search and access meetings, transcripts, emails,
 
 ## Troubleshooting
 
-**"Not authenticated" error**: Run `cb login` to authenticate.
+**"Not logged in" error**: Run `cb auth login` to authenticate.
 
-**"Token expired" error**: Run `cb login` again.
+**"Authentication expired" error**: Run `cb auth logout`, then `cb auth login` again.

@@ -2,7 +2,7 @@
 
 /**
  * Generates tools.json from the Circleback MCP server's tools/list endpoint.
- * Requires: `cb login` to have been run (needs valid auth tokens).
+ * Requires: `cb auth login` or CIRCLEBACK_API_KEY.
  */
 
 import { createRequire } from "module";
@@ -11,20 +11,20 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const require = createRequire(import.meta.url);
-const { getValidAccessToken } = require("@circleback/cli/dist/auth/oauth");
+const { getCredentialSnapshot } = require("@circleback/cli/dist/auth/credentials");
 const { BASE_URL, CLIENT_VERSION, CLIENT_VERSION_HEADER } = require("@circleback/cli/dist/constants");
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function fetchToolsList() {
-  const accessToken = await getValidAccessToken();
+  const { bearerCredential } = await getCredentialSnapshot();
 
   const response = await fetch(`${BASE_URL}/api/mcp`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json, text/event-stream",
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${bearerCredential}`,
       [CLIENT_VERSION_HEADER]: CLIENT_VERSION,
     },
     body: JSON.stringify({
