@@ -1,6 +1,6 @@
 {
   "name": "@circleback/openclaw-plugin",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "description": "Circleback plugin for OpenClaw.",
   "files": [
@@ -18,7 +18,7 @@
     "prepack": "tsc"
   },
   "dependencies": {
-    "@circleback/cli": "0.2.2"
+    "@circleback/cli": "0.4.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

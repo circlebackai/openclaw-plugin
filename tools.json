@@ -67,6 +67,7 @@
         },
         "searchTerm": {
           "type": "string",
+          "minLength": 1,
           "description": "The search term to find relevant transcript chunks."
         },
         "tags": {
@@ -109,6 +110,7 @@
           "description": "The reason why this tool call is being done. This intent is likely to be either the user's original question or the reason to investigate further based on their question."
         },
         "meetingIds": {
+          "minItems": 1,
           "maxItems": 50,
           "type": "array",
           "items": {
@@ -136,6 +138,7 @@
           "description": "The reason why this tool call is being done. This intent is likely to be either the user's original question or the reason to investigate further based on their question."
         },
         "meetingIds": {
+          "minItems": 1,
           "maxItems": 50,
           "type": "array",
           "items": {
@@ -159,9 +162,11 @@
       "type": "object",
       "properties": {
         "searchTerms": {
+          "minItems": 1,
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "description": "Array of people's names to find matching profiles."
         }
@@ -179,9 +184,11 @@
       "type": "object",
       "properties": {
         "searchTerms": {
+          "minItems": 1,
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "description": "Array of search terms to find matching company names or domains."
         }
@@ -200,6 +207,7 @@
       "properties": {
         "searchTerm": {
           "type": "string",
+          "minLength": 1,
           "description": "The search term or query to find relevant support articles about Circleback. This is typically the user's question or keywords related to their issue."
         }
       },
@@ -251,6 +259,7 @@
         },
         "searchTerm": {
           "type": "string",
+          "minLength": 1,
           "description": "A query string to find relevant email threads. Supports search terms and the following filters:\n            - from:email (sender address) or from:me (will search for emails sent by the user)\n            - to:email (recipient address)\n            - participant:email (matches from OR to, prefer using participant for broader search)\n            - before:date (latest date to include results from, in yyyy-MM-dd format)\n            - after:date (earliest date to include results from, in yyyy-MM-dd format)\n            Examples: \"Meeting participant:ali@gmail.com\", \"Q4 report participant:team@company.com\", \"project update to:sarah@company.com after:2025-04-19\", \"participant:company.com\""
         },
         "pageIndex": {
@@ -266,7 +275,7 @@
   },
   {
     "name": "SearchActionItems",
-    "description": "Find action items that match a given search term or filter. Returns action items with their title, description, status, assignee, and related meeting details.\n       By default, only action items assigned to the user are returned. To find action items assigned to someone else, use FindProfiles to resolve their name to a profile ID and pass it as assigneeProfileId.\n       Action items can be filtered by search terms, status (PENDING or DONE), tags, and meeting date range (startDate/endDate).\n       Only 25 action items are returned per page, so this function may need to be called multiple times if there are more than that many results.\n      If 25 action items are returned, call this function again with the next pageIndex to ensure you get all results.",
+    "description": "Find action items that match a given search term or filter. Returns action items with their title, description, status, assignee, and related meeting details.\n       Action items can have zero, one, or multiple related meetings. The meetings array contains all related meetings you can access and is empty when there are none. The nullable meeting field is retained as a representative meeting for compatibility.\n       This tool only searches action items; it cannot create or edit them.\n       By default, only action items assigned to the user are returned. To find action items assigned to someone else, use FindProfiles to resolve their name to a profile ID and pass it as assigneeProfileId.\n       Action items can be filtered by search terms, status (PENDING or DONE), tags, and meeting date range (startDate/endDate).\n       Only 25 action items are returned per page, so this function may need to be called multiple times if there are more than that many results.\n      If 25 action items are returned, call this function again with the next pageIndex to ensure you get all results.",
     "inputSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
