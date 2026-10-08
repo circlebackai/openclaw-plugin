@@ -1,6 +1,6 @@
 # Circleback OpenClaw plugin
 
-Circleback plugin for OpenClaw. Search and access meetings, transcripts, emails, calendar events, and more.
+Circleback plugin for OpenClaw. Search and manage meetings, transcripts, action items, tags, emails, calendar events, and more.
 
 ## Setup
 
@@ -32,9 +32,21 @@ Circleback plugin for OpenClaw. Search and access meetings, transcripts, emails,
 | SearchActionItems | Search action items with status, assignee, date, and tag filters |
 | SearchSupportArticles | Search Circleback support documentation |
 | ListTags | List all tags used to organize meetings |
+| ListTeams | List your workspace and its teams |
+| CreateActionItem | Create a standalone action item |
+| UpdateActionItem | Update an action item's title, description, status, or assignee |
+| DeleteActionItem | Permanently delete an action item |
+| CreateTag | Create a tag |
+| UpdateTag | Rename or re-describe a tag |
+| DeleteTag | Permanently delete a tag and remove it from all meetings |
+| ShareMeeting | Share a meeting with people, teams, workspaces, or via link, or revoke access |
+| UpdateMeeting | Update a meeting's name, notes, private notes, or tags |
+| UpdateCalendarEvent | Set private notes or tags on the meeting for a calendar event |
 
 ## Troubleshooting
 
 **"Not logged in" error**: Run `cb auth login` to authenticate.
 
 **"Authentication expired" error**: Run `cb auth logout`, then `cb auth login` again.
+
+**Write tools fail with a permission error**: Logins from older versions (plugin 0.1.6 and earlier) only granted read access. Run `cb auth logout`, then `cb auth login` to grant write access.

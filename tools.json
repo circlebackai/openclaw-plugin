@@ -1,7 +1,7 @@
 [
   {
     "name": "SearchMeetings",
-    "description": "Find meetings that match a given search term or filter.\n\n      Searches can be done by direct match on the meeting name or notes.\n      Search term is a direct match ignoring case, prefer to search for a single word or phrase if provided.\n      Searches can also be performed for tags or related profiles (attendees of the meetings).\n      When searching for a meeting, the tool will find the appropriate meeting and extract the relevant source excerpt based on the intent instead of returning the entire data.\n      NOTE: A search term is not explicitly required, for example if you want to find all meetings with a specific tag in a date range, only include those and don't pass a searchTerm.\n      To restrict the search further, you can provide a start and end date. This will significantly improve performance.\n      The data returned will be an an array of objects, with each containing meeting data.\n      Only 20 meetings are returned per page, so this function may need to be called multiple times if there are more than that many results.\n      If 20 meetings are returned, call this function again with the next pageIndex to ensure you get all results.\n      IMPORTANT: The pageIndex is only valid for the exact same search parameters (aside from pageIndex).\n      For example, if you provide a start / end date to fetch page 0, then you must provide the EXACT SAME start / end dates to fetch page 1.\n      ",
+    "description": "Find meetings that match a given search term or filter.\n\n      Searches match every keyword, in any order, within the meeting name or within its notes. Matching ignores case and treats punctuation between query words as separators. Partial words are supported; misspellings are not corrected.\n      Prefer a few distinctive keywords; omit searchTerm for filter-only searches.\n      Include date, tag, attendee, or domain filters when they are supplied by the user or established in the conversation. Do not invent a date range to narrow the search.\n      Returns an array of meeting summaries with relevant source excerpts based on intent. Use ReadMeetings for details about selected results.\n      Returns up to 20 meetings per page. Request the next pageIndex only when the page contains 20 meetings and more results are needed. For exhaustive requests, continue until a page contains fewer; otherwise stop when the user's request is satisfied.\n      Keep all other search parameters identical when changing pageIndex.\n      ",
     "inputSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -12,7 +12,8 @@
         },
         "searchTerm": {
           "description": "Optional search term to find related meetings.",
-          "type": "string"
+          "type": "string",
+          "maxLength": 1000
         },
         "pageIndex": {
           "type": "number",
@@ -100,7 +101,7 @@
   },
   {
     "name": "GetTranscriptsForMeetings",
-    "description": "Get the full transcripts for given meeting IDs.\n       Use string IDs like Vd6Pz_kWqLm3xY-c8RhTn.\n       The data returned will be an array of objects, each representing a full transcript for a meeting.\n       Each transcript object will contain the meetingId, meetingName, and an array of transcript segments.\n       Each segment is formatted with timestamps like: {startTimestamp: 123.45, endTimestamp: 128.00, speaker: 'John Doe', words: 'This is a test.'}\n       This should be used to get detailed transcript information for one or many meetings at once.",
+    "description": "Get the full transcripts for given meeting IDs.\n       Use string IDs like abcDEF123ghiJKL456mno.\n       The data returned will be an array of objects, each representing a full transcript for a meeting.\n       Each transcript object will contain the meetingId, meetingName, and an array of transcript segments.\n       Each segment is formatted with timestamps like: {startTimestamp: 123.45, endTimestamp: 128.00, speaker: 'John Doe', words: 'This is a test.'}\n       This should be used to get detailed transcript information for one or many meetings at once.",
     "inputSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -128,7 +129,7 @@
   },
   {
     "name": "ReadMeetings",
-    "description": "Given up to 50 meeting IDs, fetch detailed information for each meeting.\n      Use string IDs like Vd6Pz_kWqLm3xY-c8RhTn.\n      The data returned will be an array of objects, with each containing the meeting ID, name, notes, attendees, action items, AI-generated insights, creator, tags, status, duration, and creation date.",
+    "description": "Given up to 50 meeting IDs, fetch detailed information for each meeting.\n      Use string IDs like abcDEF123ghiJKL456mno.\n      The data returned will be an array of objects, with each containing the meeting ID, name, notes, your private notes, attendees, action items, AI-generated insights, creator, tags, status, duration, and creation date.",
     "inputSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -218,7 +219,7 @@
   },
   {
     "name": "SearchCalendarEvents",
-    "description": "Get calendar events from the user's connected calendars.\n       When searching for calendar events, the tool will extract relevant excerpts based on the intent instead of returning the entire data.\n       Each calendar event excerpt includes comprehensive details: event title, date (in the user's timezone), organizer email, attendees (with names, emails, and status), calendar description (if present), meeting platform (Zoom, Google Meet, Microsoft Teams, etc.), meeting platform link, whether it's a recurring event, Circleback join status, and any associated meeting data from the Circleback (meeting ID, status, tag IDs, user notes).\n       You can filter events by providing a date range using startDate and endDate parameters.\n       This is useful for finding upcoming meetings, scheduled calls, or calendar events that the user has.\n       Note: This should be primarily used for searching calendar events happening in the future. Past calendar events have a meeting record if they were captured with Circleback. The only reason to use this to search past calendar events is if searching for the meeting with SearchMeetings yielded no relevant results.\n      Only 50 calendar events are returned per page, so this function may need to be called multiple times if there are more than that many results.\n      If 50 events are returned, call this function again with the next pageIndex to ensure you get all results.",
+    "description": "Returns upcoming calendar events from the authenticated user's connected calendars, with pagination and a configurable time window. Get calendar events from the user's connected calendars.\n       When searching for calendar events, the tool will extract relevant excerpts based on the intent instead of returning the entire data.\n       Each calendar event excerpt includes comprehensive details: event title, date (in the user's timezone), organizer email, attendees (with names, emails, and status), calendar description (if present), meeting platform (Zoom, Google Meet, Microsoft Teams, etc.), meeting platform link, whether it's a recurring event, Circleback join status, and any associated meeting data from the Circleback (meeting ID, status, tag IDs, your private notes).\n       You can filter events by providing a date range using startDate and endDate parameters.\n       This is useful for finding upcoming meetings, scheduled calls, or calendar events that the user has.\n       Note: This should be primarily used for searching calendar events happening in the future. Past calendar events have a meeting record if they were captured with Circleback. The only reason to use this to search past calendar events is if searching for the meeting with SearchMeetings yielded no relevant results.\n      Returns up to 50 calendar events per page. Request the next pageIndex only when the page contains 50 events and more results are needed. For exhaustive requests, continue until a page contains fewer; otherwise stop when the user's request is satisfied.",
     "inputSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -275,7 +276,7 @@
   },
   {
     "name": "SearchActionItems",
-    "description": "Find action items that match a given search term or filter. Returns action items with their title, description, status, assignee, and related meeting details.\n       Action items can have zero, one, or multiple related meetings. The meetings array contains all related meetings you can access and is empty when there are none. The nullable meeting field is retained as a representative meeting for compatibility.\n       This tool only searches action items; it cannot create or edit them.\n       By default, only action items assigned to the user are returned. To find action items assigned to someone else, use FindProfiles to resolve their name to a profile ID and pass it as assigneeProfileId.\n       Action items can be filtered by search terms, status (PENDING or DONE), tags, and meeting date range (startDate/endDate).\n       Only 25 action items are returned per page, so this function may need to be called multiple times if there are more than that many results.\n      If 25 action items are returned, call this function again with the next pageIndex to ensure you get all results.",
+    "description": "Find action items that match a given search term or filter. Returns action items with their title, description, status, assignee, and related meeting details.\n       Action items can have zero, one, or multiple related meetings. The meetings array contains all related meetings you can access and is empty when there are none. The nullable meeting field is retained as a representative meeting for compatibility.\n       By default, only action items assigned to the user are returned. To find action items assigned to someone else, use FindProfiles to resolve their name to a profile ID and pass it as assigneeProfileId.\n       Action items can be filtered by search terms, status (PENDING or DONE), tags, and meeting date range (startDate/endDate).\n       Returns up to 25 action items per page. Request the next pageIndex only when the page contains 25 action items and more results are needed. For exhaustive requests, continue until a page contains fewer; otherwise stop when the user's request is satisfied.",
     "inputSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -331,7 +332,7 @@
   },
   {
     "name": "ListTags",
-    "description": "List all tags available in the user's workspace. Returns an array of tag objects with their IDs and names. Use this to discover available tags before filtering meetings, transcripts, or action items by tag.",
+    "description": "Returns every tag available to the authenticated user. Returns an array of tag objects with their IDs and names. Use this to discover available tags before filtering meetings, transcripts, or action items by tag.",
     "inputSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -343,6 +344,524 @@
       },
       "required": [
         "intent"
+      ]
+    }
+  },
+  {
+    "name": "ListTeams",
+    "description": "Returns the user's workspace and its teams with their IDs, or null if the user has no workspace.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "CreateActionItem",
+    "description": "Creates an action item owned by the authenticated user without linking it to a meeting. Creates a standalone action item owned by the user, not linked to a meeting. Assigns it to the user unless you pass another assignee or null. Use FindProfiles to resolve an assignee. Only create when the user asks.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The title of the action item."
+        },
+        "description": {
+          "default": "",
+          "type": "string",
+          "description": "The detailed description of the action item."
+        },
+        "assigneeProfileId": {
+          "description": "The profile ID of the assignee, or null to leave it unassigned.",
+          "anyOf": [
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "title"
+      ]
+    }
+  },
+  {
+    "name": "UpdateActionItem",
+    "description": "Updates the title, description, status, or assignee of an action item. Returns the updated action item. Provide at least one field. Omitted fields stay unchanged; use null to unassign. For an item created in this conversation, use the id CreateActionItem returned; otherwise use SearchActionItems to find it. Use FindProfiles to resolve an assignee. Only update when the user requests a change.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "title": {
+          "description": "The title of the action item.",
+          "type": "string"
+        },
+        "description": {
+          "description": "The detailed description of the action item.",
+          "type": "string"
+        },
+        "status": {
+          "description": "The completion status of the action item.",
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "DONE"
+          ]
+        },
+        "assigneeProfileId": {
+          "description": "The ID of the profile to assign the action item to, or null to remove the assignee.",
+          "anyOf": [
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actionItemId": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991,
+          "description": "The unique identifier of the action item."
+        }
+      },
+      "required": [
+        "actionItemId"
+      ]
+    }
+  },
+  {
+    "name": "DeleteActionItem",
+    "description": "Deletes an action item. Returns the deleted action item. Deletes the action item permanently. For an item created in this conversation, use the id CreateActionItem returned; otherwise use SearchActionItems to find it. Only delete when the user explicitly asks.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actionItemId": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991,
+          "description": "The unique identifier of the action item."
+        }
+      },
+      "required": [
+        "actionItemId"
+      ]
+    }
+  },
+  {
+    "name": "CreateTag",
+    "description": "Creates a new tag. If a tag with the same name already exists, a conflict error is returned. Only create when the user asks.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The display name of the tag.",
+          "type": "string"
+        },
+        "description": {
+          "description": "A description of the tag.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "color": {
+          "description": "The display color of the tag.",
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "bg-tag-neutral",
+                "bg-tag-red",
+                "bg-tag-rose",
+                "bg-tag-orange",
+                "bg-tag-amber",
+                "bg-tag-emerald",
+                "bg-tag-sky",
+                "bg-tag-blue",
+                "bg-tag-indigo",
+                "bg-tag-purple"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "UpdateTag",
+    "description": "Updates a tag's name or description. Omitted fields stay unchanged. Use ListTags to find the tag. Only update when the user requests a change.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The display name of the tag.",
+          "type": "string"
+        },
+        "description": {
+          "description": "A description of the tag.",
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "color": {
+          "description": "The display color of the tag.",
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "bg-tag-neutral",
+                "bg-tag-red",
+                "bg-tag-rose",
+                "bg-tag-orange",
+                "bg-tag-amber",
+                "bg-tag-emerald",
+                "bg-tag-sky",
+                "bg-tag-blue",
+                "bg-tag-indigo",
+                "bg-tag-purple"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tagId": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991,
+          "description": "The ID of the tag."
+        }
+      },
+      "required": [
+        "tagId"
+      ]
+    }
+  },
+  {
+    "name": "DeleteTag",
+    "description": "Permanently deletes a tag and removes it from every meeting it was applied to. Deletes a Circleback tag and removes it from the meetings and automations that use it. Use ListTags to find it. Only delete when the user explicitly asks.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "tagId": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991,
+          "description": "The ID of the tag."
+        }
+      },
+      "required": [
+        "tagId"
+      ]
+    }
+  },
+  {
+    "name": "ShareMeeting",
+    "description": "Shares a meeting with people, teams, workspaces, or the link, or removes their access. Returns the updated meeting. Each share sets exactly one target: email, profileId, workspaceId, teamId, or linkAccess. Set access to null to remove a person, team, or workspace, or linkAccess to null to turn off the link. Use FindProfiles to find profile IDs and ListTeams to find workspace and team IDs. Only change sharing when the user asks, and only set sendEmail when the user wants recipients notified.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "meetingId": {
+          "description": "The unique identifier of the meeting.",
+          "type": "string"
+        },
+        "shares": {
+          "minItems": 1,
+          "maxItems": 50,
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                    "description": "The email address to share the meeting with."
+                  },
+                  "access": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "Editor",
+                          "Viewer",
+                          "LimitedViewer"
+                        ],
+                        "description": "The access level to grant."
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "The access level to grant. Set to null to remove access."
+                  },
+                  "sendEmail": {
+                    "default": false,
+                    "description": "Set to true to email the people the meeting is shared with.",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "email",
+                  "access"
+                ],
+                "additionalProperties": false,
+                "title": "ShareWithEmail"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "profileId": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "The ID of the person to share the meeting with."
+                  },
+                  "access": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "Editor",
+                          "Viewer",
+                          "LimitedViewer"
+                        ],
+                        "description": "The access level to grant."
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "The access level to grant. Set to null to remove access."
+                  },
+                  "sendEmail": {
+                    "default": false,
+                    "description": "Set to true to email the people the meeting is shared with.",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "access"
+                ],
+                "additionalProperties": false,
+                "title": "ShareWithProfile"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "teamId": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "The unique identifier of the team to share the meeting with."
+                  },
+                  "access": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "Editor",
+                          "Viewer",
+                          "LimitedViewer"
+                        ],
+                        "description": "The access level to grant."
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "The access level to grant. Set to null to remove access."
+                  },
+                  "sendEmail": {
+                    "default": false,
+                    "description": "Set to true to email the people the meeting is shared with.",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "teamId"
+                ],
+                "additionalProperties": false,
+                "title": "ShareWithTeam"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "workspaceId": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "The unique identifier of the workspace to share the meeting with."
+                  },
+                  "access": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "Editor",
+                          "Viewer",
+                          "LimitedViewer"
+                        ],
+                        "description": "The access level to grant."
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "The access level to grant. Set to null to remove access."
+                  },
+                  "sendEmail": {
+                    "default": false,
+                    "description": "Set to true to email the people the meeting is shared with.",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "workspaceId"
+                ],
+                "additionalProperties": false,
+                "title": "ShareWithWorkspace"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "linkAccess": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "Editor",
+                          "Viewer",
+                          "LimitedViewer"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "The access level for anyone with the meeting link. Set to null to turn off the link."
+                  }
+                },
+                "required": [
+                  "linkAccess"
+                ],
+                "additionalProperties": false,
+                "title": "ShareLink"
+              }
+            ],
+            "title": "ShareTarget"
+          },
+          "description": "The people, teams, workspaces, or link to share with, up to 50. Targets that fail are listed in errors; the rest still apply."
+        }
+      },
+      "required": [
+        "meetingId",
+        "shares"
+      ]
+    }
+  },
+  {
+    "name": "UpdateMeeting",
+    "description": "Updates a meeting's name, notes, private notes, or tags. Each field you provide replaces its current value, and fields you leave out stay the same. To add to notes or tags, get the meeting first and include what's already there. Returns the meeting. To add to notes or tags, start from their current values: the meetingData from SearchCalendarEvents if you have it, otherwise ReadMeetings. tagIds: [] removes all tags. Use ListTags to find tag IDs. Only update when the user asks.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The meeting's name. Replaces the current name.",
+          "type": "string"
+        },
+        "tagIds": {
+          "description": "The IDs of the tags to set on the meeting. Replaces the meeting's current tags, so include the IDs of any tags you want to keep. Pass an empty array to remove all tags.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "notes": {
+          "description": "The meeting's notes in Markdown. Replaces the current notes, so include any existing content you want to keep.",
+          "type": "string"
+        },
+        "privateNotes": {
+          "description": "Your private notes for the meeting in Markdown. Replaces your current private notes, so include any existing content you want to keep.",
+          "type": "string"
+        },
+        "meetingId": {
+          "description": "The unique identifier of the meeting.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "meetingId"
+      ]
+    }
+  },
+  {
+    "name": "UpdateCalendarEvent",
+    "description": "Sets your private notes or tags on the Circleback meeting for a calendar event, creating the meeting if needed. Each field you provide replaces its current value, and fields you leave out stay the same. Returns the meeting. Use this for a SearchCalendarEvents result without meetingData.meetingId, and UpdateMeeting otherwise. Only update when the user asks.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "privateNotes": {
+          "description": "Your private notes for the meeting in Markdown. Replaces your current private notes, so include any existing content you want to keep.",
+          "type": "string"
+        },
+        "tagIds": {
+          "description": "The IDs of the tags to set on the meeting. Replaces the meeting's current tags, so include the IDs of any tags you want to keep. Pass an empty array to remove all tags.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "calendarMeetingId": {
+          "type": "string",
+          "description": "The ID of the calendar meeting."
+        }
+      },
+      "required": [
+        "calendarMeetingId"
       ]
     }
   }
