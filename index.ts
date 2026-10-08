@@ -6,7 +6,7 @@ export default definePluginEntry({
   id: "circleback",
   name: "Circleback",
   description:
-    "Search and access meetings, transcripts, emails, calendar events, and more from Circleback.",
+    "Search and manage meetings, transcripts, action items, tags, emails, calendar events, and more in Circleback.",
   register(api) {
     tools.forEach((tool) => {
       api.registerTool({
